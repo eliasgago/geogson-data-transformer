@@ -7,25 +7,27 @@ import static org.junit.Assert.assertNotNull;
 import org.junit.Test;
 
 import com.eliasgago.geogson.domain.Locations;
-import com.eliasgago.geogson.matcher.LocationMatcher;
+import com.eliasgago.geogson.matcher.LocationMerger;
+import com.eliasgago.geogson.parser.GalicianMunicipalityDataParser;
+import com.eliasgago.geogson.parser.GalicianMunicipalityPolygonsParser;
 
-public class GalicianMunicipalityMatcherTest {
+public class GalicianMunicipalityMergerTest {
 
 	@Test
 	public void load_data_and_list_is_not_empty() {
-		GalicianMunicipalityParser municipalitiyParser = new GalicianMunicipalityParser();
+		GalicianMunicipalityPolygonsParser municipalitiyParser = new GalicianMunicipalityPolygonsParser();
 		Locations municipalities = municipalitiyParser.loadData();
 
 		assertNotNull(municipalities);
 		assertNotEquals(0, municipalities.size());
 		
-		GalicianPostalCodeParser postalCodeParser = new GalicianPostalCodeParser();
+		GalicianMunicipalityDataParser postalCodeParser = new GalicianMunicipalityDataParser();
 		Locations postalCodes = postalCodeParser.loadData();
 
 		assertNotNull(postalCodes);
 		assertNotEquals(0, postalCodes.size());
 		
-		LocationMatcher matcher = new LocationMatcher();
+		LocationMerger matcher = new LocationMerger();
 		matcher.mergeData(municipalities, postalCodes);
 	}
 

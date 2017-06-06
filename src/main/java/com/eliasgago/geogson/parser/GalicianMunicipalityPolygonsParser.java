@@ -1,4 +1,4 @@
-package com.eliasgago.geogson;
+package com.eliasgago.geogson.parser;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -16,9 +16,9 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.stream.JsonReader;
 
-public class GalicianMunicipalityParser {
+public class GalicianMunicipalityPolygonsParser {
 	
-	public static final String MUNICIPALITIES_GALICIA_FILENAME = "features/world/spain/galicia/municipalities.geojson";
+	public static final String MUNICIPALITIES_GALICIA_FILENAME = "features/world/spain/galicia/municipality_polygons.geojson";
 
 	public Locations loadData() {
 		
@@ -41,7 +41,7 @@ public class GalicianMunicipalityParser {
 				Location place = new Location();
 				String name = feature.properties().get("municipio").toString();
 				place.setName(name.substring(1, name.length() - 1));
-				place.setFeature(feature);
+				place.setArea(feature.geometry());
 				
 				placesList.add(place);
 			}
@@ -55,19 +55,4 @@ public class GalicianMunicipalityParser {
 		
 	}
 	
-	public String writeData(Locations locations) {
-		Gson gson = new GsonBuilder()
-		   .registerTypeAdapterFactory(new GeometryAdapterFactory())
-		   .create();
-		
-		List<Feature> features = new ArrayList<Feature>();
-		for(Location location : locations){
-			features.add(location.getFeature());
-		}
-		
-		FeatureCollection featureCollection = new FeatureCollection(features);
-		return gson.toJson(featureCollection).toString();
-		
-	}
-
 }

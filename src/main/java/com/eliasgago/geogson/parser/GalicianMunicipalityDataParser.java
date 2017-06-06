@@ -1,4 +1,4 @@
-package com.eliasgago.geogson;
+package com.eliasgago.geogson.parser;
 
 import java.io.File;
 import java.io.FileReader;
@@ -8,9 +8,9 @@ import com.eliasgago.geogson.domain.Location;
 import com.eliasgago.geogson.domain.Locations;
 import com.opencsv.CSVReader;
 
-public class GalicianPostalCodeParser {
+public class GalicianMunicipalityDataParser {
 	
-	public static final String POSTAL_CODES_GALICIA_FILENAME = "features/world/spain/galicia/postal_codes.csv";
+	public static final String POSTAL_CODES_GALICIA_FILENAME = "features/world/spain/galicia/municipality_data.csv";
 
 	public Locations loadData() {
 

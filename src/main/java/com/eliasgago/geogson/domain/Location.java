@@ -1,6 +1,6 @@
 package com.eliasgago.geogson.domain;
 
-import com.github.filosganga.geogson.model.Feature;
+import com.github.filosganga.geogson.model.Geometry;
 import com.github.filosganga.geogson.model.Point;
 
 public class Location {
@@ -12,8 +12,8 @@ public class Location {
 	private String postalCode;
 	
 	private Point coordinates;
-	
-	private Feature feature;
+
+	private Geometry area;
 
 	public String getName() {
 		return name;
@@ -56,12 +56,12 @@ public class Location {
 		this.coordinates = coordinates;
 	}
 
-	public Feature getFeature() {
-		return feature;
+	public Geometry getArea() {
+		return area;
 	}
 
-	public void setFeature(Feature feature) {
-		this.feature = feature;
+	public void setArea(Geometry area) {
+		this.area = area;
 	}
 
 	@Override
@@ -77,7 +77,7 @@ public class Location {
 
 	@Override
 	public String toString() {
-		return this.name + " (code=" + this.code + ", postal_code=" + this.postalCode + ", point: " + this.coordinates + ")";
+		return this.name + " (code=" + this.code + ", postal_code=" + this.postalCode + ")";
 	}
 		
 	
