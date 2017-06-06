@@ -1,5 +1,7 @@
 package com.eliasgago.geogson.domain;
 
+import java.util.Map;
+
 import com.github.filosganga.geogson.model.Geometry;
 import com.github.filosganga.geogson.model.Point;
 
@@ -14,6 +16,8 @@ public class Location {
 	private Point coordinates;
 
 	private Geometry area;
+	
+	private Map<String, Object> data;
 
 	public String getName() {
 		return name;
@@ -64,11 +68,22 @@ public class Location {
 		this.area = area;
 	}
 
+	public Map<String, Object> getData() {
+		return data;
+	}
+
+	public void setData(Map<String, Object> data) {
+		this.data = data;
+	}
+
 	@Override
 	public boolean equals(Object obj) {
 		if(obj instanceof Location){
 			Location location = (Location) obj;
-			if(location.getName().equalsIgnoreCase(this.getName())){
+			if(location.getCode() != null && this.getCode() != null && location.getCode().equalsIgnoreCase(this.getCode())){
+				return true;
+			}
+			if(location.getName() != null && this.getName() != null && location.getName().equalsIgnoreCase(this.getName())){
 				return true;
 			}
 		}

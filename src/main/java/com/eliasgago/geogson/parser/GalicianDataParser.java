@@ -3,14 +3,16 @@ package com.eliasgago.geogson.parser;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 import com.eliasgago.geogson.domain.Location;
 import com.eliasgago.geogson.domain.Locations;
 import com.opencsv.CSVReader;
 
-public class GalicianMunicipalityDataParser {
+public class GalicianDataParser {
 	
-	public static final String POSTAL_CODES_GALICIA_FILENAME = "features/world/spain/galicia/municipality_data.csv";
+	public static final String GALICIA_DATA_FILENAME = "data/world/spain/galicia/galicia_poblacion_por_concellos.csv";
 
 	public Locations loadData() {
 
@@ -18,15 +20,17 @@ public class GalicianMunicipalityDataParser {
 		
 		try {
 			ClassLoader classLoader = getClass().getClassLoader();
-			File file = new File(classLoader.getResource(POSTAL_CODES_GALICIA_FILENAME).getFile());
+			File file = new File(classLoader.getResource(GALICIA_DATA_FILENAME).getFile());
 
-			CSVReader reader = new CSVReader(new FileReader(file));
+			CSVReader reader = new CSVReader(new FileReader(file), ';');
             String[] line;
             while ((line = reader.readNext()) != null) {
                 Location place = new Location();
-				place.setName(line[2]);
-				String code = line[0] + line[1].substring(0, 3); 
-				place.setCode(code);
+				place.setName(line[1]);
+				place.setCode(line[0]);
+				Map<String, Object> data = new HashMap<String, Object>();
+				data.put("population", line[2]);
+				place.setData(data);
 				
 				placesList.add(place);
             }

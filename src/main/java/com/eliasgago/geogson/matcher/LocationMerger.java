@@ -1,5 +1,7 @@
 package com.eliasgago.geogson.matcher;
 
+import java.util.Map;
+
 import com.eliasgago.geogson.domain.Location;
 import com.eliasgago.geogson.domain.Locations;
 import com.github.filosganga.geogson.model.Geometry;
@@ -19,6 +21,7 @@ public class LocationMerger {
 					mergedLocation.setName(locationOriginal.getName());
 					mergedLocation.setPostalCode(getPostalCode(locationOriginal, locationToMerge));
 					mergedLocation.setCode(getCode(locationOriginal, locationToMerge));
+					mergedLocation.setData(getData(locationOriginal, locationToMerge));
 					mergedLocation.setCoordinates(getCoordinates(locationOriginal, locationToMerge));
 					mergedLocation.setArea(getArea(locationOriginal, locationToMerge));
 				    
@@ -50,6 +53,15 @@ public class LocationMerger {
 			return locationOriginal.getCode();
 		else if(locationToMerge.getCode() !=  null)
 			return locationToMerge.getCode();
+		else return null;
+	}
+
+	private Map<String, Object> getData(Location locationOriginal,
+			Location locationToMerge) {
+		if(locationOriginal.getData() !=  null)
+			return locationOriginal.getData();
+		else if(locationToMerge.getData() !=  null)
+			return locationToMerge.getData();
 		else return null;
 	}
 

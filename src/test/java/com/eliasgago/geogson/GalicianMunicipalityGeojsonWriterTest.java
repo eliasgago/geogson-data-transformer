@@ -13,6 +13,7 @@ import org.junit.Test;
 
 import com.eliasgago.geogson.domain.Locations;
 import com.eliasgago.geogson.matcher.LocationMerger;
+import com.eliasgago.geogson.parser.GalicianDataParser;
 import com.eliasgago.geogson.parser.GalicianMunicipalityDataParser;
 import com.eliasgago.geogson.parser.GalicianMunicipalityPointsParser;
 import com.eliasgago.geogson.parser.GalicianMunicipalityPolygonsParser;
@@ -26,11 +27,20 @@ public class GalicianMunicipalityGeojsonWriterTest {
 
 	@Before
 	public void setUp(){
-		GalicianMunicipalityDataParser dataParser = new GalicianMunicipalityDataParser();
-		Locations municipalityData = dataParser.loadData();
+		GalicianDataParser dataParser = new GalicianDataParser();
+		Locations data = dataParser.loadData();
+
+		assertNotNull(data);
+		assertNotEquals(0, data.size());
+
+		GalicianMunicipalityDataParser municipalityDataParser = new GalicianMunicipalityDataParser();
+		Locations municipalityData = municipalityDataParser.loadData();
 
 		assertNotNull(municipalityData);
 		assertNotEquals(0, municipalityData.size());
+
+		LocationMerger matcher = new LocationMerger();
+		Locations dataLocations = matcher.mergeData(municipalityData, data);
 
 		GalicianMunicipalityPointsParser municipalitiyPointsParser = new GalicianMunicipalityPointsParser();
 		Locations municipalitiesPointsLocations = municipalitiyPointsParser.loadData();
@@ -38,8 +48,7 @@ public class GalicianMunicipalityGeojsonWriterTest {
 		assertNotNull(municipalitiesPointsLocations);
 		assertNotEquals(0, municipalitiesPointsLocations.size());
 		
-		LocationMerger matcher = new LocationMerger();
-		Locations pointsAndDataLocations = matcher.mergeData(municipalityData, municipalitiesPointsLocations);
+		Locations pointsAndDataLocations = matcher.mergeData(dataLocations, municipalitiesPointsLocations);
 
 		GalicianMunicipalityPolygonsParser municipalityPolygonsParser = new GalicianMunicipalityPolygonsParser();
 		Locations municipalityPolygonsLocations = municipalityPolygonsParser.loadData();

@@ -1,5 +1,7 @@
 package com.eliasgago.geogson.writer;
 
+import java.util.HashMap;
+
 import com.eliasgago.geogson.domain.Location;
 import com.github.filosganga.geogson.gson.GeometryAdapterFactory;
 import com.github.filosganga.geogson.model.Feature;
@@ -23,15 +25,25 @@ public class GalicianMunicipalityCoordinatesGeojsonWriter extends
 	    	Gson gson = new GsonBuilder()
 	    	   .registerTypeAdapterFactory(new GeometryAdapterFactory())
 	    	   .create();
-	    	
-	    	String json = "{\"type\": \"Feature\","
-	    			+ "\"properties\":{},"
-	    			+ "\"geometry\":{\"type\":\"Point\",\"coordinates\": [" + location.getCoordinates().coordinates().getLat() + "," + location.getCoordinates().coordinates().getLon() + "]}}";
+
+			HashMap<String, JsonElement> data = new HashMap<String, JsonElement>();
+			if(location.getData() != null) {
+				location.getData().forEach((key, value) -> {
+					data.put(key, new JsonPrimitive(value.toString())); 
+				});
+			}
+
 	    	ImmutableMap<String, JsonElement> properties = ImmutableMap.<String, JsonElement>builder()
 				    .put("name", location.getName() != null ? new JsonPrimitive(location.getName()) : new JsonPrimitive("")) 
 				    .put("code", location.getCode() != null ? new JsonPrimitive(location.getCode()) : new JsonPrimitive("")) 
 				    .put("postal_code", location.getPostalCode() != null ? new JsonPrimitive(location.getPostalCode()) : new JsonPrimitive(""))
+				    .putAll(data)
 				    .build();
+	    	
+		 	String json = "{\"type\": \"Feature\","
+		 			+ "\"properties\":" + gson.toJson(properties) + ","
+	    			+ "\"geometry\":{\"type\":\"Point\",\"coordinates\": [" + location.getCoordinates().coordinates().getLat() + "," + location.getCoordinates().coordinates().getLon() + "]}}";
+		 	
 	    	return gson.fromJson(json, Feature.class); 
 	    }
 	    return null;
