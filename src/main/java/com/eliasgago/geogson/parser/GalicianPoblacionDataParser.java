@@ -6,10 +6,13 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.springframework.stereotype.Service;
+
 import com.eliasgago.geogson.domain.Location;
 import com.eliasgago.geogson.domain.Locations;
 import com.opencsv.CSVReader;
 
+@Service
 public class GalicianPoblacionDataParser {
 	
 	public static final String GALICIA_DATA_FILENAME = "data/world/spain/galicia/galicia_poblacion_por_concellos.csv";

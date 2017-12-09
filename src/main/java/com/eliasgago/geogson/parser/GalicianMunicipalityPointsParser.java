@@ -1,36 +1,31 @@
 package com.eliasgago.geogson.parser;
 
-import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import java.io.InputStreamReader;
+
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.Resource;
+import org.springframework.stereotype.Service;
 
 import com.eliasgago.geogson.domain.Location;
 import com.eliasgago.geogson.domain.Locations;
-import com.github.filosganga.geogson.gson.GeometryAdapterFactory;
 import com.github.filosganga.geogson.model.Coordinates;
-import com.github.filosganga.geogson.model.Feature;
-import com.github.filosganga.geogson.model.FeatureCollection;
 import com.github.filosganga.geogson.model.Point;
 import com.github.filosganga.geogson.model.positions.SinglePosition;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.opencsv.CSVReader;
 
+@Service
 public class GalicianMunicipalityPointsParser {
 	
-	public static final String POSTAL_CODES_GALICIA_FILENAME = "features/world/spain/galicia/municipality_points.csv";
+	@Value(value = "classpath:features/world/spain/galicia/municipality_points.csv")
+	private Resource municipalityPoints;
 
 	public Locations loadData() {
 
 		Locations placesList = new Locations();
 		
 		try {
-			ClassLoader classLoader = getClass().getClassLoader();
-			File file = new File(classLoader.getResource(POSTAL_CODES_GALICIA_FILENAME).getFile());
-
-			CSVReader reader = new CSVReader(new FileReader(file));
+			CSVReader reader = new CSVReader(new InputStreamReader(municipalityPoints.getInputStream()));
             String[] line;
             while ((line = reader.readNext()) != null) {
                 Location place = new Location();
@@ -43,6 +38,7 @@ public class GalicianMunicipalityPointsParser {
 				
 				placesList.add(place);
             }
+            reader.close();
         } catch (IOException e) {
             e.printStackTrace();
         }

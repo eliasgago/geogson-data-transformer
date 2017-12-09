@@ -24,10 +24,10 @@ public class Location {
 	}
 
 	public void setName(String name) {
-		name = name.toLowerCase();
+		name = name.trim().toLowerCase();
 		if(name.contains(",")) {
 			String[] nameSplitted = name.split(",");
-			name = nameSplitted[1] + " " + nameSplitted[0];
+			name = nameSplitted[1].trim() + " " + nameSplitted[0];
 		}
 		if(name.contains("(")) {
 			String[] nameSplitted = name.split(" \\(");
@@ -83,6 +83,9 @@ public class Location {
 			if(location.getCode() != null && this.getCode() != null && location.getCode().equalsIgnoreCase(this.getCode())){
 				return true;
 			}
+			if(location.getPostalCode() != null && this.getPostalCode() != null && location.getPostalCode().equalsIgnoreCase(this.getPostalCode())){
+				return true;
+			}
 			if(location.getName() != null && this.getName() != null && location.getName().equalsIgnoreCase(this.getName())){
 				return true;
 			}
@@ -93,10 +96,13 @@ public class Location {
 	@Override
 	public String toString() {
 		final StringBuilder result = new StringBuilder();
-		result.append(this.name + " (" + this.code + ") -> ");
-		this.data.forEach((key, value) -> {
-			result.append(" " + key + ":" + value + ";");
-		});
+		result.append(this.name.toUpperCase() + " (code: " + this.code + ", postalCode: "+ this.postalCode + ") -> {");
+		if(this.data != null) {
+			this.data.forEach((key, value) -> {
+				result.append(" " + key + "=" + value + ", ");
+			});
+		}
+		result.append("}");
 		return result.toString();
 	}
 		
