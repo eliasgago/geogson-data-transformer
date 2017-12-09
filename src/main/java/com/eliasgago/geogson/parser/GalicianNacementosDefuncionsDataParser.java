@@ -10,9 +10,9 @@ import com.eliasgago.geogson.domain.Location;
 import com.eliasgago.geogson.domain.Locations;
 import com.opencsv.CSVReader;
 
-public class GalicianDataParser {
+public class GalicianNacementosDefuncionsDataParser {
 	
-	public static final String GALICIA_DATA_FILENAME = "data/world/spain/galicia/galicia_poblacion_por_concellos.csv";
+	public static final String GALICIA_DATA_FILENAME = "data/world/spain/galicia/nacementos_defuncions_por_concello.csv";
 
 	public Locations loadData() {
 
@@ -29,7 +29,8 @@ public class GalicianDataParser {
 				place.setName(line[1]);
 				place.setCode(line[0]);
 				Map<String, Object> data = new HashMap<String, Object>();
-				data.put("population", line[2]);
+				data.put("nacementos", line[2]);
+				data.put("defuncions", line[3]);
 				place.setData(data);
 				
 				placesList.add(place);

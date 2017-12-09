@@ -1,5 +1,6 @@
 package com.eliasgago.geogson.matcher;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import com.eliasgago.geogson.domain.Location;
@@ -58,11 +59,16 @@ public class LocationMerger {
 
 	private Map<String, Object> getData(Location locationOriginal,
 			Location locationToMerge) {
-		if(locationOriginal.getData() !=  null)
-			return locationOriginal.getData();
-		else if(locationToMerge.getData() !=  null)
+		if(locationOriginal.getData() ==  null)
 			return locationToMerge.getData();
-		else return null;
+		else if(locationToMerge.getData() ==  null)
+			return locationOriginal.getData();
+		else {
+			Map<String, Object> result = new HashMap<String, Object>();
+			result.putAll(locationOriginal.getData());
+			result.putAll(locationToMerge.getData());
+			return result;
+		}
 	}
 
 	private Point getCoordinates(Location locationOriginal,

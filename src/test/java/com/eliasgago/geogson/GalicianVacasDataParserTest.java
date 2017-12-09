@@ -8,7 +8,6 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 
-import org.junit.Before;
 import org.junit.Test;
 
 import com.eliasgago.geogson.domain.Locations;
@@ -17,31 +16,24 @@ import com.eliasgago.geogson.parser.GalicianMunicipalityDataParser;
 import com.eliasgago.geogson.parser.GalicianMunicipalityPointsParser;
 import com.eliasgago.geogson.parser.GalicianMunicipalityPolygonsParser;
 import com.eliasgago.geogson.parser.GalicianPoblacionDataParser;
-import com.eliasgago.geogson.parser.GalicianPopulationEvolutionDataParser;
+import com.eliasgago.geogson.parser.GalicianVacasDataParser;
 import com.eliasgago.geogson.writer.GalicianMunicipalityAreaGeojsonWriter;
-import com.eliasgago.geogson.writer.GalicianMunicipalityCoordinatesGeojsonWriter;
 import com.eliasgago.geogson.writer.GalicianMunicipalityGeojsonWriter;
 
-public class GalicianMunicipalityGeojsonWriterTest {
-	
-	private Locations mergeResult;
+public class GalicianVacasDataParserTest {
 
-	@Before
-	public void setUp(){
+	@Test
+	public void load_data_and_list_is_not_empty() {
+		GalicianVacasDataParser parser = new GalicianVacasDataParser();
+		Locations dataVacas = parser.loadData();
+		assertNotNull(dataVacas);
+		assertNotEquals(0, dataVacas.size());
+
 		GalicianPoblacionDataParser dataParser = new GalicianPoblacionDataParser();
 		Locations dataPoblacion = dataParser.loadData();
 
-		assertNotNull(dataPoblacion);
-		assertNotEquals(0, dataPoblacion.size());
-
-		GalicianPopulationEvolutionDataParser dataEvolutionDataParser = new GalicianPopulationEvolutionDataParser();
-		Locations dataEvolution = dataEvolutionDataParser.loadData();
-
-		assertNotNull(dataEvolution);
-		assertNotEquals(0, dataEvolution.size());
-
 		LocationMerger matcher = new LocationMerger();
-		Locations data = matcher.mergeData(dataPoblacion, dataEvolution);
+		Locations dataLocations = matcher.mergeData(dataPoblacion, dataVacas);
 
 		GalicianMunicipalityDataParser municipalityDataParser = new GalicianMunicipalityDataParser();
 		Locations municipalityData = municipalityDataParser.loadData();
@@ -49,7 +41,7 @@ public class GalicianMunicipalityGeojsonWriterTest {
 		assertNotNull(municipalityData);
 		assertNotEquals(0, municipalityData.size());
 
-		Locations dataLocations = matcher.mergeData(municipalityData, data);
+		Locations dataMunicipality = matcher.mergeData(municipalityData, dataLocations);
 
 		GalicianMunicipalityPointsParser municipalitiyPointsParser = new GalicianMunicipalityPointsParser();
 		Locations municipalitiesPointsLocations = municipalitiyPointsParser.loadData();
@@ -57,7 +49,7 @@ public class GalicianMunicipalityGeojsonWriterTest {
 		assertNotNull(municipalitiesPointsLocations);
 		assertNotEquals(0, municipalitiesPointsLocations.size());
 		
-		Locations pointsAndDataLocations = matcher.mergeData(dataLocations, municipalitiesPointsLocations);
+		Locations pointsAndDataLocations = matcher.mergeData(dataMunicipality, municipalitiesPointsLocations);
 
 		GalicianMunicipalityPolygonsParser municipalityPolygonsParser = new GalicianMunicipalityPolygonsParser();
 		Locations municipalityPolygonsLocations = municipalityPolygonsParser.loadData();
@@ -65,40 +57,19 @@ public class GalicianMunicipalityGeojsonWriterTest {
 		assertNotNull(municipalityPolygonsLocations);
 		assertNotEquals(0, municipalityPolygonsLocations.size());
 		
-		mergeResult = matcher.mergeData(pointsAndDataLocations, municipalityPolygonsLocations);
+		Locations data = matcher.mergeData(pointsAndDataLocations, municipalityPolygonsLocations);
 
-		System.out.println(mergeResult);
-		assertNotNull(mergeResult);
-		assertNotEquals(0, mergeResult.size());
 		
+		GalicianMunicipalityGeojsonWriter galicianMunicipalityGeojsonWriter = new GalicianMunicipalityAreaGeojsonWriter();
+		String result = galicianMunicipalityGeojsonWriter.writeData(data);
+		try {
+			FileWriter writer = new FileWriter(new File("test_vacas.json"));
+			writer.append(result);
+			writer.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
-	@Test
-	public void load_data_and_merge_and_write_with_coordinates() {
-		GalicianMunicipalityGeojsonWriter galicianMunicipalityGeojsonWriter = new GalicianMunicipalityCoordinatesGeojsonWriter();
-		String result = galicianMunicipalityGeojsonWriter.writeData(mergeResult);
-		try {
-			FileWriter writer = new FileWriter(new File("test_coordinates.json"));
-			writer.append(result);
-			writer.close();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
-	
-	@Test
-	public void load_data_and_merge_and_write_with_areas() {
-		GalicianMunicipalityGeojsonWriter galicianMunicipalityGeojsonWriter = new GalicianMunicipalityAreaGeojsonWriter();
-		String result = galicianMunicipalityGeojsonWriter.writeData(mergeResult);
-		try {
-			FileWriter writer = new FileWriter(new File("test_areas.json"));
-			writer.append(result);
-			writer.close();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
-	
 }

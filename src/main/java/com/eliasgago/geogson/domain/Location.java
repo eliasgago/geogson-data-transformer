@@ -92,7 +92,12 @@ public class Location {
 
 	@Override
 	public String toString() {
-		return this.name + " (code=" + this.code + ", postal_code=" + this.postalCode + ")";
+		final StringBuilder result = new StringBuilder();
+		result.append(this.name + " (" + this.code + ") -> ");
+		this.data.forEach((key, value) -> {
+			result.append(" " + key + ":" + value + ";");
+		});
+		return result.toString();
 	}
 		
 	
