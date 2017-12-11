@@ -10,7 +10,7 @@ import com.eliasgago.geogson.service.GetGalicianMunicipalityPointsService;
 import com.eliasgago.geogson.service.GetGalicianPopulationService;
 
 @SpringBootApplication
-public class Application implements CommandLineRunner {
+public class Application {
 
     @Autowired
     private GetGalicianPopulationService getGalicianPopulationService;
@@ -25,10 +25,10 @@ public class Application implements CommandLineRunner {
 
     }
 
-    @Override
+    /*@Override
     public void run(String... args) throws Exception {
     	getGalicianPopulationService.execute();
     	getGalicianMunicipalityPointsService.execute();
         System.exit(0);
-    }
+    }*/
 }

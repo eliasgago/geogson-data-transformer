@@ -96,13 +96,14 @@ public class Location {
 	@Override
 	public String toString() {
 		final StringBuilder result = new StringBuilder();
-		result.append(this.name.toUpperCase() + " (code: " + this.code + ", postalCode: "+ this.postalCode + ") -> {");
+		result.append(this.name + " (code: " + this.code + ", postalCode: "+ this.postalCode + ") -> {");
 		if(this.data != null) {
 			this.data.forEach((key, value) -> {
 				result.append(" " + key + "=" + value + ", ");
 			});
 		}
 		result.append("}");
+		result.append(", Coordinates=" + this.coordinates);
 		return result.toString();
 	}
 		
