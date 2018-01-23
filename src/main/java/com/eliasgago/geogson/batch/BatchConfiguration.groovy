@@ -15,6 +15,12 @@ import com.eliasgago.geogson.batch.points.MunicipalityPointProcessor
 import com.eliasgago.geogson.batch.points.MunicipalityPointReader
 import com.eliasgago.geogson.batch.points.MunicipalityPointWriter
 import com.eliasgago.geogson.batch.points.MunicipalityPointsCompletionNotificationListener
+import com.eliasgago.geogson.batch.polygons.MunicipalityPolygonProcessor
+import com.eliasgago.geogson.batch.polygons.MunicipalityPolygonReader
+import com.eliasgago.geogson.batch.polygons.MunicipalityPolygonWriter
+import com.eliasgago.geogson.batch.population.MunicipalityPopulationProcessor
+import com.eliasgago.geogson.batch.population.MunicipalityPopulationReader
+import com.eliasgago.geogson.batch.population.MunicipalityPopulationWriter
 import com.eliasgago.geogson.domain.Location
 
 @Configuration
@@ -27,6 +33,7 @@ public class BatchConfiguration {
     @Autowired
     public StepBuilderFactory stepBuilderFactory;
 
+	
 	@Autowired
 	MunicipalityPointReader municipalityPointReader
 	
@@ -36,13 +43,35 @@ public class BatchConfiguration {
 	@Autowired
 	MunicipalityPointWriter municipalityPointWriter
 
+	
+	@Autowired
+	MunicipalityPolygonReader municipalityPolygonReader
+	
+	@Autowired
+	MunicipalityPolygonProcessor municipalityPolygonProcessor
+	
+	@Autowired
+	MunicipalityPolygonWriter municipalityPolygonWriter
+
+	
+	@Autowired
+	MunicipalityPopulationReader municipalityPopulationReader
+	
+	@Autowired
+	MunicipalityPopulationProcessor municipalityPopulationProcessor
+	
+	@Autowired
+	MunicipalityPopulationWriter municipalityPopulationWriter
+
+	
     @Bean
     public Job importUserJob(MunicipalityPointsCompletionNotificationListener listener) {
         return jobBuilderFactory.get("importUserJob")
                 .incrementer(new RunIdIncrementer())
                 .listener(listener)
-                .flow(stepMunicipalityPoints())
-                .end()
+                .start(stepMunicipalityPolygon())
+                .next(stepMunicipalityPoints())
+                .next(stepMunicipalityPopulation())
                 .build();
     }
 
@@ -52,6 +81,18 @@ public class BatchConfiguration {
 		listener.setKeys(["finalListLocations"] as String[]);
 		return listener;
 	}
+	
+	@Bean
+	public Step stepMunicipalityPolygon() {
+		return stepBuilderFactory.get("stepMunicipalityPolygons")
+				.<MunicipalityPoint, Location> chunk(1000)
+				.listener(promotionListener())
+				.reader(municipalityPolygonReader)
+				.processor(municipalityPolygonProcessor)
+				.writer(municipalityPolygonWriter)
+				.build();
+	}
+	
 	
     @Bean
     public Step stepMunicipalityPoints() {
@@ -63,5 +104,16 @@ public class BatchConfiguration {
                 .writer(municipalityPointWriter)
                 .build();
     }
+	
+	@Bean
+	public Step stepMunicipalityPopulation() {
+		return stepBuilderFactory.get("stepMunicipalityPopulation")
+				.<MunicipalityPoint, Location> chunk(1000)
+				.listener(promotionListener())
+				.reader(municipalityPopulationReader)
+				.processor(municipalityPopulationProcessor)
+				.writer(municipalityPopulationWriter)
+				.build();
+	}
 
 }

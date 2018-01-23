@@ -1,4 +1,4 @@
-package com.eliasgago.geogson.batch.points;
+package com.eliasgago.geogson.batch.polygons;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.batch.core.BatchStatus;
@@ -12,9 +12,9 @@ import org.springframework.stereotype.Component;
 import com.eliasgago.geogson.domain.Location
 
 @Component
-public class MunicipalityPointsCompletionNotificationListener extends JobExecutionListenerSupport {
+public class MunicipalityPolygonsCompletionNotificationListener extends JobExecutionListenerSupport {
 
-	private static final Logger log = LoggerFactory.getLogger(MunicipalityPointsCompletionNotificationListener.class);
+	private static final Logger log = LoggerFactory.getLogger(MunicipalityPolygonsCompletionNotificationListener.class);
 
 	@Override
 	public void afterJob(JobExecution jobExecution) {
