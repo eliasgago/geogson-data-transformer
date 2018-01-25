@@ -23,7 +23,7 @@ class MunicipalityPolygonProcessor extends LocationProcessor<Feature> {
 			area: municipalityPolygon.geometry()
 		);
 		
-		return LocationHelper.getLocationMerged(location, finalListLocations)
+		return LocationHelper.getLocationMerged(location, locations)
     }
 
 }

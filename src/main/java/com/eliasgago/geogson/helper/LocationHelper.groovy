@@ -1,17 +1,19 @@
 package com.eliasgago.geogson.helper
 
-import java.util.HashMap
-import java.util.List
-import java.util.Map
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 
 import com.eliasgago.geogson.domain.Location
+import com.eliasgago.geogson.domain.Locations
 import com.github.filosganga.geogson.model.Geometry
 import com.github.filosganga.geogson.model.Point
 
 class LocationHelper {
+	
+	private static final Logger log = LoggerFactory.getLogger(LocationHelper.class);
 
-	public static Location getLocationMerged(Location location, List<Location> locationList) {
-		for(Location locationToMerge: locationList){
+	public static Location getLocationMerged(Location location, Locations locations) {
+		for(Location locationToMerge: locations.locations){
 			if(location.equals(locationToMerge)){
 				Location mergedLocation = new Location();
 				mergedLocation.setName(location.getName());
@@ -24,7 +26,12 @@ class LocationHelper {
 				return mergedLocation
 			}
 		}
-		return location
+		if(locations.locations){
+			log.error('NO ENCONTRADO: ' + location);
+			return null
+		}else{
+			return location
+		}
 	}
 	
 	private static String getPostalCode(Location locationOriginal,

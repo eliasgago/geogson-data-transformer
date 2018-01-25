@@ -12,6 +12,14 @@ public class Locations implements Iterable<Location> {
 		locations = new ArrayList<Location>();
 	}
 	
+	public void setLocations(List<Location> locations) {
+		this.locations = locations;
+	}
+	
+	public List<Location> getLocations() {
+		return this.locations;
+	}
+	
 	public void add(Location location) {
 		locations.add(location);
 	}

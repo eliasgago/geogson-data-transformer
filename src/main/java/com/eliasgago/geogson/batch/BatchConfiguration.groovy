@@ -3,6 +3,7 @@ import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
+import org.springframework.batch.core.configuration.annotation.JobScope
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
 import org.springframework.batch.core.launch.support.RunIdIncrementer;
 import org.springframework.batch.core.listener.ExecutionContextPromotionListener
@@ -22,6 +23,7 @@ import com.eliasgago.geogson.batch.population.MunicipalityPopulationProcessor
 import com.eliasgago.geogson.batch.population.MunicipalityPopulationReader
 import com.eliasgago.geogson.batch.population.MunicipalityPopulationWriter
 import com.eliasgago.geogson.domain.Location
+import com.eliasgago.geogson.domain.Locations
 
 @Configuration
 @EnableBatchProcessing
@@ -63,6 +65,11 @@ public class BatchConfiguration {
 	@Autowired
 	MunicipalityPopulationWriter municipalityPopulationWriter
 
+	@Bean
+	@JobScope
+	public Locations locations() {
+	  return new Locations();
+	}
 	
     @Bean
     public Job importUserJob(MunicipalityPointsCompletionNotificationListener listener) {

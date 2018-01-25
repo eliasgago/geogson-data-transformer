@@ -30,7 +30,7 @@ class MunicipalityPopulationProcessor  extends LocationProcessor<MunicipalityPop
 		
         log.info("Converting (" + municipalityPopulation + ") into (" + location + ")");
 		
-		return LocationHelper.getLocationMerged(location, finalListLocations)
+		return LocationHelper.getLocationMerged(location, locations)
     }
 
 }

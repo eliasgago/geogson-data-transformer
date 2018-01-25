@@ -34,7 +34,7 @@ class MunicipalityPointProcessor extends LocationProcessor<MunicipalityPoint> {
 
         log.info("Converting (" + municipalityPoint + ") into (" + location + ")");
 		
-		return LocationHelper.getLocationMerged(location, finalListLocations)
+		return LocationHelper.getLocationMerged(location, locations)
     }
 
 }
